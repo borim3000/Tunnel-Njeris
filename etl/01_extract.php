@@ -7,9 +7,19 @@ function fetchWeatherData() {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        throw new Exception('Error fetching weather data: ' . curl_error($ch));
+    }   
+
     curl_close($ch);
 
-    return json_decode($response, true);
+    $data = json_decode($response, true);
+    if (!$data) {
+        throw new Exception('Error decoding weather data JSON');
+    }
+
+    return $data;
 }
 
 // -> fetch von velozähler api
@@ -19,12 +29,21 @@ function fetchCyclistData() {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        throw new Exception('Error fetching cyclist data: ' . curl_error($ch));
+    }
     curl_close($ch);
 
-    return json_decode($response, true);
+    $data = json_decode($response, true);
+    if (!$data) {
+        throw new Exception('Error decoding cyclist data JSON');
+    }
+
+    return $data;
 }
 
-// -> daten kombinieren (optional)
+// -> daten kombinieren 
 $data = [
     'weather' => fetchWeatherData(),
     'cyclists' => fetchCyclistData()
@@ -38,6 +57,6 @@ echo '</pre>';
 */
 
 // -> daten weitergeben
-return $data
+return $data;
 
 ?>
