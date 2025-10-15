@@ -24,6 +24,7 @@ $transformed_data['precipitation'] = end($precipitation_hourly) ?? null;
 echo '<pre>';
 print_r($transformed_data);
 echo '</pre>';
+exit;
 */
 
 // -> daten weitergeben

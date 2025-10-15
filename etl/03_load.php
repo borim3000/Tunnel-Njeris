@@ -4,14 +4,14 @@
 $data = include('02_transform.php');
 
 // -> datenbank zugangsdaten einbinden
-require_once '../config.php';
+require_once 'config.php';
 
 // -> verbindung mit der datenbank
 try {
     $pdo = new PDO($dsn, $username, $password, $options);
 
     // prüfen, ob datensatz für diese stunde schon existiert
-    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM entries WHERE timestamp = ?");
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM velotunnel_db WHERE timestamp = ?");
     $stmtCheck->execute([$data['timestamp']]);
     $exists = $stmtCheck->fetchColumn();
 
@@ -21,7 +21,7 @@ try {
     }
 
     // insert vorbereiten
-    $sql = "INSERT INTO entries (timestamp, cyclists, temperature, precipitation) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO velotunnel_db (timestamp, cyclists, temperature, precipitation) VALUES (?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         $data['timestamp'],

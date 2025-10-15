@@ -1,9 +1,9 @@
 <?php
 
 $host = 'zf2c4d.myd.infomaniak.com';
-$dbname = 'velo_weather_db';
-$username = 'zf2c4d_temp_1';
-$password = 'zxWboyzlg7oI';
+$dbname = 'zf2c4d_im3';
+$username = 'zf2c4d_ETLscript';
+$password = 'UDf!S35x$e.61D';
 
 $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
 
