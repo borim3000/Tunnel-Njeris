@@ -14,8 +14,8 @@ if (empty($records)) {
     return [];
 }
 
-// -> nur die letzten 24 Datensätze nehmen
-$latest_records = array_slice($records, 0, 24); // 0 = Start, 24 = Anzahl Einträge
+// -> nur die letzten 720 Datensätze nehmen
+$latest_records = array_slice($records, 0, 720); // lade die letzten 1 Monate
 
 // -> wetterdaten vorbereiten
 $weather = $data['weather'] ?? [];
