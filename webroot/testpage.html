@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testpage</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+  <h2>Velo testdiagramm</h2>
+  <p id="status">lade daten...</p>
+
+  <canvas id="veloChart"></canvas>
+
+  <script>
+    async function start() {
+
+      const url = "https://tunnel.mmp-premium.ch/etl/unload.php"
+
+      try {
+        const r = await fetch(url);
+        const res = await r.json();
+
+        console.log("API-Response:", res);
+
+        if (!res.data || res.data.length === 0) {
+          document.getElementById("status").innerText = "Keine Daten erhalten.";
+          return;
+        }
+        const timestamps = res.data.map(d => d.timestamp);
+        const cyclists = res.data.map(d => d.cyclists);
+
+        console.log("timestamps:", timestamps.slice(0, 5));
+        console.log("cyclists:", cyclists.slice(0, 5));
+
+        const ctx = document.getElementById('veloChart').getContext('2d');
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: timestamps, 
+            datasets: [{
+              label: "velos pro stunde",
+              data: cyclists,
+              borderWidth: 2,
+              tension: 0.2
+            }]
+          }
+        });
+
+        document.getElementById("status").innerText = `Geladene Punkte: ${cyclists.length}`;
+
+      } catch (e) {
+        console.error(e);
+        document.getElementById("status").innerText = "Fehler beim Laden der Daten.";
+      }
+    }
+    start();
+  </script>
+</body>
+</html>
