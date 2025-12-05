@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wie viele Njeris im Tunnel?</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <!-- Header -->
   <header class="site-header">
@@ -42,6 +44,13 @@
         </p>
       </div>
     </section>
+
+    <h2>Velotunnel - Verlauf der letzten 7 Tage</h2>
+    <p id="status">lade daten...</p>
+
+    <canvas id="comboChart"></canvas>
+
+    <script src="/script.js"></script>
 
     <!-- Zeitverlauf: Linien-Chart (Platzhalter) -->
     <section class="card chart-card" id="zeitverlauf">
