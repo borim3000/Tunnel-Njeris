@@ -18,16 +18,6 @@ try {
     $inserted = 0;
     $skipped = 0;
 
-    // sicherstellen, dass $data_list eine liste ist
-    if (!empty($data_list) && is_array($data_list)) {
-        usort($data_list, function($a, $b) {
-            $ta = strtotime($a['timestamp'] ?? '');
-            $tb = strtotime($b['timestamp'] ?? '');
-            if ($ta == $tb) return 0;
-            return ($ta < $tb) ? -1 : 1; // -1 => $a vor $b -> aufsteigend
-        });
-    }
-
     foreach ($data_list as $entry) {
         if (empty($entry['timestamp'])) {
             $skipped++;

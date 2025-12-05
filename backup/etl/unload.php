@@ -13,7 +13,7 @@ try {
 
     $stmt = $pdo->query("
         SELECT timestamp, cyclists, temperature, precipitation
-        FROM velotunnel_db_v3
+        FROM velotunnel_db
         ORDER BY timestamp ASC
     ");
 
