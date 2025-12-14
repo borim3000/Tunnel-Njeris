@@ -23,55 +23,47 @@ $weather_times = $weather['hourly']['time'] ?? [];
 $temperature_hourly = $weather['hourly']['temperature_2m'] ?? [];
 $precipitation_hourly = $weather['hourly']['precipitation'] ?? [];
 
-// -> für jede velo-messung den passenden wetterwert suchen
+//1 lookup map erstellen
+
+$weather_map = [];
+foreach ($weather_times as $index => $isoTime) {
+    //konvertieren datenformat in einheitliches format
+    $key = date('Y-m-d H:i', strtotime($isoTime));
+
+    $weather_map[$key] = [
+        'temp' => $temperature_hourly[$index] ?? null,
+        'precip' => $precipitation_hourly[$index] ?? null
+    ];
+}
+
+// für jede velo messung den passenden wetterwert suchen
 foreach ($latest_records as $record) {
     if (empty($record['stunde'])) {
         continue;
     }
 
-    $timestamp = $record['stunde'];
-    $velo_in = isset($record['velo_in']) ? (int)$record['velo_in'] : 0;
+    $rawTimestamp = $record['stunde'];
+
+    // in einheitliches format bringen
+    $searchKey = date('Y-m-d H:i', strtotime($rawTimestamp));
 
     $matchedTemperature = null;
     $matchedPrecipitation = null;
 
-    // Finde Wetterstunde, die zeitlich am nächsten liegt (innerhalb 2 Stunden)
-    $veloEpoch = strtotime($timestamp);
-    $bestDiff = PHP_INT_MAX;
-    $foundIndex = null;
-
-    foreach ($weather_times as $i => $wt) {
-        $wepoch = strtotime($wt);
-        if ($wepoch === false) continue;
-
-        $diff = abs($wepoch - $veloEpoch);
-        if ($diff < $bestDiff) {
-            $bestDiff = $diff;
-            $foundIndex = $i;
-        }
+    //2 strikter vergleich: check ob es für diesen key einen wettereintrag gibt
+    if (isset($weather_map[$searchKey])) {  
+        $matchedTemperature = (float)$weather_map[$searchKey]['temp'];
+        $matchedPrecipitation = (float)$weather_map[$searchKey]['precip'];
     }
 
-    if ($foundIndex !== null && $bestDiff <= 7200) { // max. 2 Stunden Differenz
-        $matchedTemperature = isset($temperature_hourly[$foundIndex]) ? (float)$temperature_hourly[$foundIndex] : null;
-        $matchedPrecipitation = isset($precipitation_hourly[$foundIndex]) ? (float)$precipitation_hourly[$foundIndex] : null;
-    }
-
-    // Ergebnis zur Liste hinzufügen
+    //ergebnis zur liste hinzufügen
     $transformed_list[] = [
-        'timestamp' => $timestamp,
-        'cyclists' => $velo_in,
+        'timestamp' => $rawTimestamp,
+        'cyclists' => isset($record['velo_in']) ? (int)$record['velo_in'] : 0,
         'temperature' => $matchedTemperature,
         'precipitation' => $matchedPrecipitation
     ];
 }
 
-// -> testen
-/*
-echo '<pre>';
-print_r($transformed_list);
-echo '</pre>';
-exit;
-*/
-
-// -> daten weitergeben
 return $transformed_list;
+?>

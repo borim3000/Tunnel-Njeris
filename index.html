@@ -1,11 +1,18 @@
 <!doctype html>
 <html lang="de">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wie viele Njeris im Tunnel?</title>
+
+  <link rel="icon" type="image/png" href="/img/njeris-icon.png"/>
+  <link rel="apple-touch-icon" href="/img/njeris-icon.png" />
+
   <link rel="stylesheet" href="/styles.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -16,7 +23,9 @@
   <header class="site-header">
     <div class="container header-inner">
       <div class="brand">
-        <div class="brand-badge" aria-hidden="true"><img src="/img/MMP VELO WAPPEN.png" alt="Logo der Velostadt Züri"></div>
+        <div class="brand-badge" aria-hidden="true">
+          <a href="/index.html"><img src="/img/MMP VELO WAPPEN.png" alt="Logo der Velostadt Züri"></a>
+        </div>
         <div class="brand-text">
           <div class="brand-title">Stadt Züri</div>
           <div class="brand-sub">Abteilung der wichtigen Daten</div>
@@ -33,11 +42,11 @@
       <div class="lead">
         <p>
           Der Stadttunnel in Zürich wurde am 22. Mai 2025 feierlich eröffnet. Er verläuft unter dem Hauptbahnhof,
-          verbindet die Kasernenstrasse auf der einen Seite mit dem Sihlquai auf der anderen Seite – inklusive neuer
+          verbindet die Kasernenstrasse auf der einen Seite mit dem Sihlquai auf der anderen Seite - inklusive neuer
           Rampen und einer Velostation direkt an der Passage Sihlquai. Der überdeckte Bereich des Tunnels misst rund
           320 Meter, von der Oberfläche bei der Kasernenstrasse bis hin zur Oberfläche beim Sihlquai inklusive Wänden
           und neuer Rampe beträgt die Distanz etwa 440 Meter. Bereits wenige als einen Monat nach der Eröffnung wurden
-          mehr als 100'000 Velofahrten durch den Tunnel gezählt – ein klares Zeichen dafür, wie stark das Bedürfnis
+          mehr als 100'000 Velofahrten durch den Tunnel gezählt - ein klares Zeichen dafür, wie stark das Bedürfnis
           nach dieser Verbindung ist.
         </p>
         <p>
@@ -45,37 +54,15 @@
           Zählers der Stadt Zürich mit dem Wetter aus dem selben Zeitraum, um visuell die Beziehung der Velofahrenden
           der Stadt und dem Niederschlag zu zeigen.
         </p>
+
+        <p id="status">lade Daten...</p>
+
       </div>
     </section>
 
-    <h2>Velotunnel - Verlauf der letzten 7 Tage</h2>
-    <p id="status">lade Daten...</p>
-
+    <!-- chart für die letzten 5 tage -->
+    <h2>Neuste Daten dieser Woche</h2>
     <canvas id="weeklyChart"></canvas>
-
-
-    <!-- Zeitverlauf: Linien-Chart (Platzhalter) -->
-    <section class="card chart-card" id="zeitverlauf">
-      <header class="card-header">
-        <h2 class="card-title">Veloverkehr über den Tag</h2>
-        <ul class="icon-strip" aria-hidden="true">
-          <li>06:00 🌧️</li>
-          <li>08:00 ☁️</li>
-          <li>10:00 ⛅</li>
-          <li>12:00 ☀️</li>
-          <li>14:00 ☀️</li>
-          <li>16:00 ⛅</li>
-          <li>18:00 ☁️</li>
-          <li>20:00 🌧️</li>
-        </ul>
-      </header>
-
-      <!-- Platzhalter für künftiges Liniendiagramm -->
-      <div class="chart-placeholder" data-chart="line" role="img" aria-label="Platzhalter für Linien­diagramm">
-        <span class="placeholder-label">Linien­diagramm – Platzhalter</span>
-      </div>
-      <p class="card-caption">Datenquelle: Velozähler Stadttunnel (Südportal)</p>
-    </section>
 
     <section class="text-block">
       <p>
@@ -87,26 +74,10 @@
       </p>
     </section>
 
-    <!-- Wochenansicht: Balken-Chart (Platzhalter) -->
-    <section class="card chart-card" id="wochenansicht">
-      <header class="card-header">
-        <h2 class="card-title">28. September 2025 – 05. Oktober 2025</h2>
-        <ul class="weekday-strip" aria-hidden="true">
-          <li>Mo 🌧️</li>
-          <li>Di ☁️</li>
-          <li>Mi ☀️</li>
-          <li>Do ☀️</li>
-          <li>Fr ☁️</li>
-          <li>Sa 🌤️</li>
-          <li>So 🌥️</li>
-        </ul>
-      </header>
-
-      <!-- Platzhalter für künftiges Wochen-Balkendiagramm -->
-      <div class="chart-placeholder" data-chart="bars" role="img" aria-label="Platzhalter für Wochen‑Balkendiagramm">
-        <span class="placeholder-label">Balken­diagramm Woche – Platzhalter</span>
-      </div>
-    </section>
+    <!-- chart für die letzten 24 stunden -->
+    <h2>Verlauf der neusten 24 Stunden</h2>
+    <p>Der Velozähler liefert die Daten mit einem Delay von zwei bis drei Tagen.</p>
+    <canvas id="dailyChart"></canvas>
 
     <section class="text-block">
       <h3 class="section-title">Nun zusammengerechnet:</h3>
@@ -119,19 +90,10 @@
       </p>
     </section>
 
-    <!-- Gesamtzeitraum: Balken-Chart (Platzhalter) -->
-    <section class="card chart-card" id="gesamtzeitraum">
-      <header class="card-header">
-        <h2 class="card-title">Ganzer Messungszeitraum: 22. Mai 2025 – Heute*</h2>
-      </header>
-
-      <!-- Platzhalter für künftiges Gesamt-Balkendiagramm -->
-      <div class="chart-placeholder chart-tall" data-chart="bars" role="img" aria-label="Platzhalter für Gesamt‑Balkendiagramm">
-        <span class="placeholder-label">Balken­diagramm gesamt – Platzhalter</span>
-      </div>
-
-      <p class="footnote">* neuester Datenstand im 7‑Tage‑Intervall</p>
-    </section>
+<div class="vergleichChart">
+  <h3>Einfluss von Regen auf den Veloverkehr (Durchschnitt)</h3>
+  <canvas id="rainBarChart"></canvas>
+</div>
 
     <script src="/script.js"></script>
   </main>

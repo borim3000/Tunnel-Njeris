@@ -13,19 +13,22 @@
   }
   
   *{ box-sizing:border-box; }
-  html,body{ height:100%; }
+  html,body{ min-height:100%; }
   
   body{
     margin:0;
     color:var(--black);
     font-family: 'Roboto', sans-serif; 
-    line-height:1.6;
     background:#fff;
   }
   
   canvas{
     width: 100% !important;
     height: auto !important;
+  }
+
+  p{
+    line-height: 1.5;
   }
 
   .container{
@@ -40,12 +43,18 @@
 
   .site-header{
     border-top: 10px solid var(--lightblue);
+    position: sticky;
+    top: 0;
+    background:#fff;
+    z-index:100;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
   }
   
   .header-inner{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    line-height: 0;
   }
   
   .brand{
@@ -58,7 +67,6 @@
   .brand-badge img{
     height:75px;
     width:auto;
-    transform:translateY(5px);
   }
   
   .brand-text{
@@ -70,6 +78,7 @@
     font-weight:800;
     color :var(--darkblue);
     font-size:clamp(1.4rem, 3.2vw, 1.8rem);
+    line-height: 1.3;
   }
   
   .brand-sub{
@@ -77,12 +86,15 @@
     color:var(--muted);
     color :var(--darkblue);
     font-size:clamp(1rem, 2vw, 1.3rem);
+    line-height: 1;
   }
   
   .header-accent{
     height: 80px;
-    width: 40vw;
+    width: clamp(6px, 40vw, 500px);
     background:var(--darkblue);
+
+    margin-right: calc(clamp(16px, 3vw, 28px) * -1);
   }
   
   /* ================
@@ -103,29 +115,7 @@
     margin:0 0 14px 0; 
     
   }
-  
-  /* Cards / Blöcke */
-  .card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:clamp(14px, 2.2vw, 22px);
-    margin-block:24px;
-  }
-  
-  .card-header{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:10px;
-  }
-  
-  .card-title{
-    margin:0;
-    font-size:clamp(1.1rem, 2.5vw, 1.35rem);
-  }
-  
+
   .icon-strip, .weekday-strip{
     display:flex;
     flex-wrap:wrap;
@@ -152,41 +142,11 @@
     font-size:.95rem;
   }
   
-  /* Platzhalter für Diagramme */
-  .chart-placeholder{
-    position:relative;
-    height:260px;
-    border:2px dashed #b8c6ff;
-    border-radius:12px;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        rgba(19,46,235,0.04) 0px,
-        rgba(19,46,235,0.04) 12px,
-        transparent 12px,
-        transparent 24px
-      ),
-      linear-gradient(#f9fbff, #eef3ff);
-    display:grid;
-    place-items:center;
-    isolation:isolate;
+  .vergleichChart{
+    margin-top: 50px;
   }
   
-  .chart-placeholder.chart-tall{
-    height:360px;
-  }
-  
-  .placeholder-label{
-    font-weight:700;
-    color:#334155;
-    background:#fff;
-    border:1px solid var(--border);
-    padding:.4rem .7rem;
-    border-radius:8px;
-    box-shadow:var(--shadow);
-  }
-  
-  /* Fließtexte */
+  /* Fliesstexte */
   .text-block{ margin-block:16px 10px; }
   .section-title{ margin:0 0 6px 0; font-size:1.1rem; }
   .footnote{ color:var(--muted); margin-top:10px; font-size:.95rem; }
