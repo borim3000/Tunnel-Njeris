@@ -17,6 +17,18 @@ async function loadDashboard() {
         const canvas = document.getElementById(canvasId);
         if (!canvas || chartData.length === 0) return;
 
+        //1.1 mobile view adjustment: if scren is smaller than 600px, use radius 1 . otherwise use 2
+        const isMobile = window.innerWidth < 600;
+        const adaptivePointRadius = isMobile ? 1 : 2;
+        //1.2 keep hitbox of points large so it is easier to use on mobile
+        const adaptiveHitRadius = 15;
+
+        //1.3 different chart window aspect ratio for mobile
+        const adaptiveAspectRatio = isMobile ? 1.1 : 2.5;
+
+        //1.4 date&time label rotation depending on screen size
+        const adaptiveRotation = isMobile ? 60 : 0;
+
         //2 extract data
         const labels = chartData.map(e => e.timestamp);
         const cyclists = chartData.map(e => e.cyclists);
@@ -80,12 +92,19 @@ async function loadDashboard() {
                         tension: 0.2,
                         borderColor: '#0F05A0',
                         backgroundColor: '#0F05A0',
+                        pointRadius: adaptivePointRadius,
+                        pointHitRadius: adaptiveHitRadius,
                         order: 1 // draw on top
                     }
                 ]
             },
             options: {
                 responsive: true,
+
+                //apply aspcet ratio for mobile vs desktop
+                maintainAspectRatio: true,
+                aspectRatio: adaptiveAspectRatio,
+
                 plugins: { 
                     legend: { labels: { color: '#333' } },
                     title: {
@@ -146,7 +165,8 @@ async function loadDashboard() {
                     },
                     x: {
                         ticks: {
-                            maxRotation: 0,
+                            maxRotation: adaptiveRotation,
+                            minRotation: adaptiveRotation,
                             autoSkip: false,
                             callback: xTickCallback
                         },
@@ -230,45 +250,142 @@ async function loadDashboard() {
     const avgDry = dryHours > 0 ? Math.round(drySum / dryHours) : 0;
 
     // 4 draw comparison chart
-    const ctxComparison = document.getElementById("rainBarChart").getContext("2d");
+    const pieCanvas = document.getElementById("rainPieChart");
 
-    new Chart(ctxComparison, {
-        type: "bar",
-        data: {
-            labels: ['Kein Regen (Trocken)', 'Bei Regen'],
-            datasets: [{
-                label: 'Durchschnittliche Anzahl Velofahrer pro Stunde',
-                data: [avgDry, avgRain],
-                backgroundColor: ['#0F05A0', 'rgba(255, 99, 132, 0.7)'],
-                borderColor: ['#0F05A0', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: 'Durchschnittliche Anzahl Velofahrer pro Stunde nach Niederschlag',
-                    color: '#333',
-                    font: { size: 14 }
-                }
+    if (pieCanvas) {
+        const ctxComparison = pieCanvas.getContext("2d");
+
+        const isMobilePie = window.innerWidth < 600;
+
+        //destroy existing chart instance if exists to prevent glitches
+        const existingPie = Chart.getChart("rainPieChart");
+        if (existingPie)  existingPie.destroy();
+
+        new Chart(ctxComparison, {
+            type: "doughnut",
+            data: {
+                labels: ['Kein Regen (Trocken)', 'Bei Regen'],
+                datasets: [{
+                    label: 'Durchschnittliche Anzahl Velofahrer pro Stunde',
+                    data: [avgDry, avgRain],
+                    backgroundColor: ['#0F05A0', 'rgba(255, 99, 132, 0.7)'],
+                    borderColor: ['#0F05A0', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1,
+                    hoverOffset: 4
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: { text: 'Anzahl Velofahrer', display: true }
-                }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, //stop it from getting too big
+                plugins: {
+                    legend: { 
+                        position: 'bottom',
+                        labels: { color: '#333', padding: 20 }
+                    },
+                    title: {
+                        display: true,
+                        text: isMobilePie // adaptive for mobile view
+                            ? ['Durchschnittliche Anzahl Velofahrer', 'pro Stunde nach Niederschlag']
+                            : 'Durchschnittliche Anzahl Velofahrer pro Stunde nach Niederschlag',
+                        color: '#333',
+                        font: { size: 16 },
+                        padding: { bottom: 20}
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                let total = avgDry + avgRain;
+                                let percentage = Math.round((value / total) * 100) + "%";
+                                return context.label + ": " + value + " (" + percentage + ")";
+                            }
+                        }
+                    }
+                },
+                layout: { padding: 20}
             }
-        }
-    });
+        });
 
-    //set background style
-    const rainCanvas = document.getElementById("rainBarChart");
-    if (rainCanvas) {
-        rainCanvas.style.backgroundColor = '#EFF5FF';
-        rainCanvas.style.borderRadius = '8px';
+        //set background style
+        pieCanvas.style.backgroundColor = '#EFF5FF';
+        pieCanvas.style.borderRadius = '8px';
+        pieCanvas.style.maxHeight = '400px';
+    } else {
+        console.warn("Element 'rainPieChart' im HTML nicht gefunden.");
+    }
+
+    //4 logic: all-time total cyclists line chart
+    const ctxAllTime = document.getElementById("allTimeChart");
+
+    if (ctxAllTime && result.data.length > 0) {
+
+        //1 prepare data
+        const allLabels = result.data.map(e => e.timestamp);
+        const allCyclists = result.data.map(e => e.cyclists);
+
+        //2 mobile check for height adjustment
+        const isMobileAllTime = window.innerWidth < 600;
+
+        new Chart(ctxAllTime, {
+            type: "line",
+            data: {
+                labels: allLabels,
+                datasets: [{
+                    label: "Anzahl Velofahrer (gesamt)",
+                    data: allCyclists,
+                    borderColor: '#0F05A0',
+                    backgroundColor: 'rgba(15, 5, 160, 0.7)',
+                    borderWidth: 1.5,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHitRadius: 20,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: isMobileAllTime ? 1.5 : 3,
+
+                plugins: { 
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Anzahl Velofahrer über den gesamten Messzeitraum',
+                        color: '#666',
+                        font: { size: 14 },
+                        padding: { bottom: 15 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            maxRotation: 0,
+                            autoSkip: true,
+                            maxTicksLimit: isMobileAllTime ? 5 : 12, //limit labels to keep it clean
+                            callback: function(value, index, values) {
+                                // show formatted date
+                                const date = new Date(this.getLabelForValue(value));
+                                return date.toLocaleDateString('de-DE', { day: '2-digit', month: 'short'});
+                            }
+                        },
+                        grid: { display: false } //cleaner look
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { text: "Anzahl Velofahrer", display: true }
+                    }
+                },
+            }
+        });
+
+        //set background style
+        ctxAllTime.style.backgroundColor = '#EFF5FF';
+        ctxAllTime.style.borderRadius = '8px';
     }
 
     document.getElementById("status").innerText = "Daten erfolgreich geladen.";
