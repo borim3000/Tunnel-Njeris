@@ -1,5 +1,14 @@
 <?php
 
+// security für ETL script
+$secret_key = "87ans#E@nAl0g_mmp24cv";
+
+if (!isset($_GET['key']) || $_GET['key'] !== $secret_key) {
+    header('HTTP/1.1 403 Forbidden');
+    echo "Access denied.";
+    exit;
+}
+
 // -> daten als array laden (mehrere einträge)
 $data_list = include(__DIR__ . '/02_transform.php');
 
