@@ -182,10 +182,7 @@ async function loadDashboard() {
     }
 
     // logic 1: weekly chart
-    const now = new Date();
-    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-    const weeklyData = result.data.filter(entry => new Date(entry.timestamp) >= sevenDaysAgo);
+    const weeklyData = result.data.slice(-168); //last 7 days = 168 hours
     
     drawChart("weeklyChart", weeklyData, function(value) {
         //weekly logic: show date at midnight, time at noon
