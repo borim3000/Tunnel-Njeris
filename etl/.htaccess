@@ -1,18 +1,2 @@
-# Deny access to everything by default
-Order Deny,Allow
+# This locks the database config and load logic away from everyone
 Deny from all
-
-# EXCEPTION 1: Allow JavaScript to read unload.php
-<Files "unload.php">
-    Allow from all
-</Files>
-
-# EXCEPTION 2: Allow the Scheduler to run load.php (PHP key check still applies)
-<Files "load.php">
-    Allow from all
-</Files>
-
-# Strictly deny any access to config.php or logs
-<Files "config.php">
-    Deny from all
-</Files>

@@ -1,5 +1,5 @@
 async function loadDashboard() {
-    const url = "/etl/unload.php";
+    const url = "/unload.php";
 
     try {
         const response = await fetch(url);

@@ -1,0 +1,16 @@
+# 1. Force the server to allow access to the task script
+<Files "run_task.php">
+    Order allow,deny
+    Allow from all
+    Satisfy Any
+</Files>
+
+# 2. Allow unload.php so your charts can read data
+<Files "unload.php">
+    Order allow,deny
+    Allow from all
+    Satisfy Any
+</Files>
+
+# 3. Prevent directory listing (good security practice)
+Options -Indexes
