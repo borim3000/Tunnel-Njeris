@@ -16,4 +16,6 @@ Nach langem Troubleshooting entschieden wir uns, trotzdem die Passwortfunktion v
 
 Als das ETL und der Task Scheduler sauber lief, bauten wir die webseite mit allen geplanten graphen aus und verfeinerten zu schluss den Textinhalt, das CSS und machten letzte Anpassungen im JS.
 
+Side Info: Die API der Stadt Zürich wird jährlich ersetzt. Wir mussten sie nach Neujahr durch die API des Jahres 26 ersetzen. 
+
 Zur KI: zu beginn hat Robin nur chatGPT verwendet und dann irgendwann hat er zu gemini gewechselt. Gemini scheint für Coding besser zu sein, und mehr den code zu behalten. Wenn man den Code aus der KI abschreibt und mitüberlegt, welche line was macht, versteht man am schluss auch seinen code selbst und kann einfacher änderungen vornehmen, also ist direkt kopieren sicher nicht eine gute idee.
