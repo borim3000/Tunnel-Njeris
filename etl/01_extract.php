@@ -24,7 +24,7 @@ function fetchWeatherData() {
 
 // -> fetch von velozähler api
 function fetchCyclistData() {
-    $url = "https://data.stadt-zuerich.ch/api/3/action/datastore_search_sql?sql=SELECT%20DATE_TRUNC(%27HOUR%27%2C%20%22DATUM%22%3A%3ATIMESTAMP)%20AS%20stunde%2C%20SUM(%22VELO_IN%22%3A%3AINT)%20AS%20velo_in%20FROM%20%229e535ea2-7273-4474-94f7-ac64d2f16ae6%22%20WHERE%20%22FK_STANDORT%22%20%3D%20%274272%27%20GROUP%20BY%201%20ORDER%20BY%201%20DESC";
+    $url = "https://data.stadt-zuerich.ch/api/3/action/datastore_search_sql?sql=SELECT%20DATE_TRUNC(%27HOUR%27%2C%20%22DATUM%22%3A%3ATIMESTAMP)%20AS%20stunde%2C%20SUM(%22VELO_IN%22%3A%3AINT)%20AS%20velo_in%20FROM%20%22ab641c27-53c0-433d-bd02-e25394ba0918%22%20WHERE%20%22FK_STANDORT%22%20%3D%20%274272%27%20GROUP%20BY%201%20ORDER%20BY%201%20DESC";
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

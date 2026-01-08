@@ -35,7 +35,7 @@ try {
         }
 
         // prüfen, ob datensatz schon existiert
-        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM velotunnel_db WHERE timestamp = ?");
+        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM velotunnel_db_v3 WHERE timestamp = ?");
         $stmtCheck->execute([$entry['timestamp']]);
         $exists = $stmtCheck->fetchColumn();
 
@@ -45,7 +45,7 @@ try {
         }
 
         // insert vorbereiten
-        $sql = "INSERT INTO velotunnel_db (timestamp, cyclists, temperature, precipitation) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO velotunnel_db_v3 (timestamp, cyclists, temperature, precipitation) VALUES (?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             $entry['timestamp'],
